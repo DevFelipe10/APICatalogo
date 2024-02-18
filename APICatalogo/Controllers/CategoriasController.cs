@@ -70,7 +70,7 @@ namespace APICatalogo.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post(Categoria categoria)
+        public ActionResult<Categoria> Post(Categoria categoria)
         {
             try
             {
@@ -116,7 +116,7 @@ namespace APICatalogo.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public ActionResult Delete(int id)
+        public ActionResult<Produto> Delete(int id)
         {
             try
             {
