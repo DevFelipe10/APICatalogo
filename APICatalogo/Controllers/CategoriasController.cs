@@ -18,14 +18,14 @@ namespace APICatalogo.Controllers
         }
 
         [HttpGet("produtos")]
-        public ActionResult<IEnumerable<Categoria>> GetCategoriasProduto()
+        public async Task<ActionResult<IEnumerable<Categoria>>> GetCategoriasProduto()
         {
             try
             {
-                return _context.Categorias
+                return await _context.Categorias
                 .Include(p => p.Produtos)
                 .AsNoTracking()
-                .Where(c => c.CategoriaId <= 5).ToList();
+                .Where(c => c.CategoriaId <= 5).ToListAsync();
             }
             catch (Exception)
             {
@@ -35,11 +35,11 @@ namespace APICatalogo.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Categoria>> Get()
+        public async Task<ActionResult<IEnumerable<Categoria>>> Get()
         {
             try
             {
-                return _context.Categorias.AsNoTracking().Take(10).ToList();
+                return await _context.Categorias.AsNoTracking().Take(10).ToListAsync();
             }
             catch (Exception)
             {
@@ -49,11 +49,12 @@ namespace APICatalogo.Controllers
         }
 
         [HttpGet("{id:int}", Name = "ObterCategoria")]
-        public ActionResult<Categoria> Get(int id)
+        public async Task<ActionResult<Categoria>> Get(int id)
         {
             try
             {
-                var categoria = _context.Categorias.FirstOrDefault(c => c.CategoriaId == id);
+                var categoria = await _context.Categorias
+                    .FirstOrDefaultAsync(c => c.CategoriaId == id);
 
                 if (categoria is null)
                 {
