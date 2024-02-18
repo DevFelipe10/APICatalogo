@@ -2,7 +2,7 @@
 
 namespace APICatalogo.Validation;
 
-public class PrimeiraLetraMaisculaAttribute : ValidationAttribute
+public class PrimeiraLetraMaiusculaAttribute : ValidationAttribute
 {
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
