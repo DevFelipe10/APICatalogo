@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using APICatalogo.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
@@ -11,6 +12,7 @@ public class Produto
     [Required(ErrorMessage = "O nome é obrigatório")]
     [StringLength(80, ErrorMessage = "O nome de ter no máximo {1} caractéres",
         MinimumLength = 5)]
+    [PrimeiraLetraMaiscula]
     public string? Nome { get; set; }
 
     [Required]
