@@ -12,15 +12,19 @@ namespace APICatalogo.Controllers
     public class CategoriasController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<CategoriasController> _logger;
 
-        public CategoriasController(AppDbContext context)
+        public CategoriasController(AppDbContext context, ILogger<CategoriasController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         [HttpGet("produtos")]
         public async Task<ActionResult<IEnumerable<Categoria>>> GetCategoriasProduto()
         {
+            _logger.LogInformation("==========Get api/categorias/produtos================");
+
             try
             {
                 return await _context.Categorias
