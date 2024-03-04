@@ -4,7 +4,7 @@ using System.Net;
 
 namespace APICatalogo.Extensions;
 
-public static class ApiExceptionModdlewareExtensions
+public static class ApiExceptionMiddlewareExtensions
 {
     public static void ConfigureExceptionHandler(this IApplicationBuilder app)
     {
