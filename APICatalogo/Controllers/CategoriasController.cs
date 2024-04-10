@@ -1,8 +1,7 @@
-﻿using APICatalogo.Context;
-using APICatalogo.Filters;
+﻿using APICatalogo.Filters;
 using APICatalogo.Models;
+using APICatalogo.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace APICatalogo.Controllers;
 
@@ -10,45 +9,50 @@ namespace APICatalogo.Controllers;
 [ApiController]
 public class CategoriasController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly ICategoriaRepository _repository;
     private readonly ILogger<CategoriasController> _logger;
 
-    public CategoriasController(AppDbContext context, ILogger<CategoriasController> logger)
+    public CategoriasController(ILogger<CategoriasController> logger, ICategoriaRepository repository)
     {
-        _context = context;
+        _repository = repository;
         _logger = logger;
     }
 
-    [HttpGet("produtos")]
-    public async Task<ActionResult<IEnumerable<Categoria>>> GetCategoriasProduto()
-    {
-        _logger.LogInformation("==========Get api/categorias/produtos================");
+    //[HttpGet("produtos")]
+    //public async Task<ActionResult<IEnumerable<Categoria>>> GetCategoriasProduto()
+    //{
+    //    _logger.LogInformation("==========Get api/categorias/produtos================");
 
-        return await _context.Categorias
-        .Include(p => p.Produtos)
-        .AsNoTracking()
-        .Where(c => c.CategoriaId <= 5).ToListAsync();
-    }
+    //    return await _context.Categorias
+    //    .Include(p => p.Produtos)
+    //    .AsNoTracking()
+    //    .Where(c => c.CategoriaId <= 5).ToListAsync();
+    //}
 
     [HttpGet]
     [ServiceFilter(typeof(ApiLoggingFilter))]
-    public async Task<ActionResult<IEnumerable<Categoria>>> Get()
+    public ActionResult<IEnumerable<Categoria>> Get()
     {
-        return await _context.Categorias.AsNoTracking().Take(10).ToListAsync();
+        var categoria = _repository.GetCategorias();
+
+        if (categoria is null)
+            throw new ArgumentNullException(nameof(categoria));
+
+        return Ok(categoria);
     }
 
     [HttpGet("{id:int}", Name = "ObterCategoria")]
-    public async Task<ActionResult<Categoria>> Get(int id)
+    public ActionResult<Categoria> Get(int id)
     {
-        var categoria = await _context.Categorias
-            .FirstOrDefaultAsync(c => c.CategoriaId == id);
+        var categoria = _repository.GetCategoria(id);
 
         if (categoria is null)
         {
+            _logger.LogWarning($"Categoria com id = {id} não encontrada...");
             return NotFound($"Produto com id = {id} não encontrado...");
         }
 
-        return categoria;
+        return Ok(categoria);
     }
 
     [HttpPost]
@@ -59,11 +63,10 @@ public class CategoriasController : ControllerBase
             return BadRequest("Objeto categoria é nulo");
         }
 
-        _context.Categorias.Add(categoria);
-        _context.SaveChanges();
+        var categoriaCriada = _repository.Create(categoria);
 
         return new CreatedAtRouteResult("ObterCategoria",
-            new { id = categoria.CategoriaId }, categoria);
+            new { id = categoriaCriada.CategoriaId }, categoriaCriada);
     }
 
     [HttpPut("{id:int}")]
@@ -74,8 +77,7 @@ public class CategoriasController : ControllerBase
             return BadRequest($"O id = {id} informado não é igual ao objeto categoria");
         }
 
-        _context.Entry(categoria).State = EntityState.Modified;
-        _context.SaveChanges();
+        _repository.Update(categoria);
 
         return Ok(categoria);
     }
@@ -83,13 +85,15 @@ public class CategoriasController : ControllerBase
     [HttpDelete("{id:int}")]
     public ActionResult<Produto> Delete(int id)
     {
-        var categoria = _context.Categorias.FirstOrDefault(c => c.CategoriaId == id);
+        var categoria = _repository.GetCategoria(id);
 
         if (categoria is null)
         {
             return NotFound($"Categoria com id = {id} não encontrada...");
         }
 
-        return Ok(categoria);
+        var categoriaExcluida = _repository.Delete(id);
+
+        return Ok(categoriaExcluida);
     }
 }
