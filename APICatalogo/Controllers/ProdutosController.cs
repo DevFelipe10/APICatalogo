@@ -42,6 +42,11 @@ public class ProdutosController : ControllerBase
     {
         var produtos = _uof.ProdutoRepository.GetProdutos(produtosParameters);
 
+        return ObterProdutos(produtos);
+    }
+
+    private ActionResult<IEnumerable<ProdutoDTO>> ObterProdutos(PagedList<Produto> produtos)
+    {
         var metadata = new
         {
             produtos.TotalCount,
@@ -57,6 +62,14 @@ public class ProdutosController : ControllerBase
         var produtosDto = _mapper.Map<IEnumerable<ProdutoDTO>>(produtos);
 
         return Ok(produtosDto);
+    }
+
+    [HttpGet("filter/preco/pagination")]
+    public ActionResult<IEnumerable<ProdutoDTO>> GetProdutosFilterPreco([FromQuery] ProdutosFiltroPreco produtosFiltroPreco)
+    {
+        var produtos = _uof.ProdutoRepository.GetProdutosFiltroPreco(produtosFiltroPreco);
+
+        return ObterProdutos(produtos);
     }
 
     [HttpGet]
