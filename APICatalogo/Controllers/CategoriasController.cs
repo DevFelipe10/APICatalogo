@@ -1,9 +1,10 @@
 ﻿using APICatalogo.DTOs;
 using APICatalogo.DTOs.Mappings;
 using APICatalogo.Filters;
-using APICatalogo.Models;
+using APICatalogo.Pagination;
 using APICatalogo.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace APICatalogo.Controllers;
 
@@ -40,6 +41,29 @@ public class CategoriasController : ControllerBase
 
         if (categorias is null)
             return NotFound("Não existem categorias...");
+
+        var categoriasDto = categorias.ToCategoriaDTOList();
+
+        return Ok(categoriasDto);
+    }
+
+    [HttpGet("pagination")]
+    public ActionResult<IEnumerable<CategoriaDTO>> Get([FromQuery]
+                                CategoriasParameters categoriasParameters)
+    {
+        var categorias = _uof.CategoriaRepository.GetCategorias(categoriasParameters);
+
+        var metadata = new
+        {
+            categorias.TotalCount,
+            categorias.PageSize,
+            categorias.CurrentPage,
+            categorias.TotalPages,
+            categorias.HasNext,
+            categorias.HasPrevious
+        };
+
+        Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
 
         var categoriasDto = categorias.ToCategoriaDTOList();
 
