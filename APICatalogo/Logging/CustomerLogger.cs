@@ -13,7 +13,7 @@ public class CustomerLogger : ILogger
 
     public bool IsEnabled(LogLevel logLevel)
     {
-        return logLevel == loggerConfig.logLevel;
+        return logLevel == loggerConfig.LogLevel;
     }
 
     public IDisposable BeginScope<TState>(TState state)

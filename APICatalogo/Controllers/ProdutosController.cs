@@ -3,6 +3,7 @@ using APICatalogo.Models;
 using APICatalogo.Pagination;
 using APICatalogo.Repositories;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -37,6 +38,7 @@ public class ProdutosController : ControllerBase
         return Ok(produtosDto);
     }
 
+    [Authorize(Policy = "UserOnly")]
     [HttpGet("pagination")]
     public async Task<ActionResult<IEnumerable<ProdutoDTO>>> Get([FromQuery]
                                     ProdutosParameters produtosParameters)
@@ -73,6 +75,7 @@ public class ProdutosController : ControllerBase
         return ObterProdutos(produtos);
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ProdutoDTO>>> Get()
     {

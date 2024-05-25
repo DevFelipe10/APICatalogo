@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>true</InvariantGlobalization>
+    <UserSecretsId>76d9edf4-710c-4e49-8491-9a994ec4996c</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,21 +18,23 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.2">
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.2">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.1" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="9.1.2" />
   </ItemGroup>
 
