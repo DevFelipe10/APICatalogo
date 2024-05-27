@@ -1,5 +1,4 @@
 ﻿using APICatalogo.Controllers;
-using ApiCatalogoxUnitTests.UnitTests.Produtos;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -8,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ApiCatalogoxUnitTests.UnitTests;
+namespace ApiCatalogoxUnitTests.UnitTests.Produtos;
 
 public class DeleteProdutosUnitTest : IClassFixture<ProdutosUnitTestController>
 {

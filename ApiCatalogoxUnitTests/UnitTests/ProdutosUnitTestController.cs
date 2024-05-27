@@ -1,12 +1,11 @@
-﻿using APICatalogo.Context;
-using APICatalogo.DTOs.Mappings;
+﻿using APICatalogo.DTOs.Mappings;
 using APICatalogo.Repositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace ApiCatalogoxUnitTests.UnitTests.Produtos;
+namespace ApiCatalogoxUnitTests.UnitTests;
 
 public class ProdutosUnitTestController
 {
