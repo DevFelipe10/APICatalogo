@@ -25,6 +25,8 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpGet("produtos/{id}")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<ProdutoDTO>>> GetProdutosCategoria(int id)
     {
         var produtos = await _uof.ProdutoRepository.GetProdutosPorCategoriaAsync(id);
@@ -40,6 +42,7 @@ public class ProdutosController : ControllerBase
 
     [Authorize(Policy = "UserOnly")]
     [HttpGet("pagination")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<ProdutoDTO>>> Get([FromQuery]
                                     ProdutosParameters produtosParameters)
     {
@@ -68,6 +71,7 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpGet("filter/preco/pagination")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<ProdutoDTO>>> GetProdutosFilterPreco([FromQuery] ProdutosFiltroPreco produtosFiltroPreco)
     {
         var produtos = await _uof.ProdutoRepository.GetProdutosFiltroPrecoAsync(produtosFiltroPreco);
@@ -77,23 +81,37 @@ public class ProdutosController : ControllerBase
 
     [Authorize]
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<ProdutoDTO>>> Get()
     {
-        var produtos = await _uof.ProdutoRepository.GetAllAsync();
-
-        if (produtos is null)
+        try
         {
-            return NotFound("Produtos não encontrados...");
+            var produtos = await _uof.ProdutoRepository.GetAllAsync();
+
+            if (produtos is null)
+                return NotFound("Produtos não encontrados...");
+
+            var produtosDto = _mapper.Map<IEnumerable<ProdutoDTO>>(produtos);
+
+            return Ok(produtosDto);
         }
-
-        var produtosDto = _mapper.Map<IEnumerable<ProdutoDTO>>(produtos);
-
-        return Ok(produtosDto);
+        catch (Exception)
+        {
+            return BadRequest();
+        }
     }
 
     [HttpGet("{id:int}", Name = "ObterProduto")]
-    public async Task<ActionResult<ProdutoDTO>> Get(int id)
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<ProdutoDTO>> Get(int? id)
     {
+        if (id == null || id <= 0)
+            return BadRequest("Id do produto inválido");
+
         var produto = await _uof.ProdutoRepository.GetAsync(p => p.ProdutoId == id);
 
         if (produto is null)
@@ -107,6 +125,8 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult<ProdutoDTO>> Post(ProdutoDTO produtoDto)
     {
         if (produtoDto is null)
@@ -124,6 +144,9 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpPatch("{id}/UpdatePartial")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<ProdutoDTOUpdateResponse>> Patch(int id,
         JsonPatchDocument<ProdutoDTOUpdateRequest> patchProdutoDTO)
     {
@@ -152,6 +175,8 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<ProdutoDTO>> Put(int id, ProdutoDTO produtoDto)
     {
         if (id != produtoDto.ProdutoId)
@@ -168,6 +193,8 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<ProdutoDTO>> Delete(int id)
     {
         var produto = await _uof.ProdutoRepository.GetAsync(p => p.ProdutoId == id);
